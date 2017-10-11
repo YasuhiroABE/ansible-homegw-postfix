@@ -1,0 +1,63 @@
+---
+- name: install server packages
+  apt: pkg={{ item }} update_cache=yes cache_valid_time=1200
+  with_items:
+    - postfix
+    - maildrop
+  register: result
+  
+- name: modify mydestination in the postfix main file
+  become: True
+  lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: "^mydestination"
+    line: "mydestination = localhost.localdomain, localhost, {{ homegw_postfix_internal_hostname }}, {{ homegw_postfix_internal_hostname }}.{{ homegw_postfix_internal_domainname }}, {{ homegw_postfix_external_hostname }}, {{ homegw_postfix_external_hostname }}.{{ homegw_postfix_external_domainname }}"
+  register: result
+
+- name: modify relayhost in the postfix main file
+  become: True
+  lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: "^relayhost"
+    line: "relayhost = {{ homegw_postfix_relayhost }}"
+  register: result
+
+- name: modify mynetworks in the postfix main file
+  become: True
+  lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: "^mynetworks"
+    line: "mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 {{ homegw_postfix_internal_hostprefix }} {{ homegw_postfix_external_hostprefix }}"
+  register: result
+
+- name: modify message_size_limit in the postfix main file
+  become: True
+  lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: "^message_size_limit"
+    line: "message_size_limit = {{ homegw_postfix_message_size_limit }}"
+  register: result
+
+- name: modify mailbox_command in the postfix main file
+  become: True
+  lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: "^mailbox_command"
+    line: "mailbox_command = /usr/bin/maildrop -d ${USER}"
+  register: result
+
+- name: modify mailbox_command in the postfix main file
+  become: True
+  lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: "^maildrop_destination_recipient_limit"
+    line: "maildrop_destination_recipient_limit=1"
+  register: result
+
+- name: modify maildroprc file
+  become: True
+  lineinfile:
+    path: /etc/maildroprc
+    regexp: "^DEFAULT="
+    line: 'DEFAULT="{{ homegw_postfix_maildrop_default_maildir }}"'
+  register: result

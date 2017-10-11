@@ -1,0 +1,21 @@
+---
+## 
+homegw_postfix_external_hostprefix: 172.16.0.1/24
+homegw_postfix_internal_hostprefix: 192.168.0.1/24
+
+## hostname and domain of global ip address
+homegw_postfix_external_hostname: 'www'
+homegw_postfix_external_domainname: 'ext.example.org'
+
+## hostname and domain of internal-private ip address
+homegw_postfix_internal_hostname: 'homegw'
+homegw_postfix_internal_domainname: 'example.org'
+
+## External SMTP server for mail relay.
+homegw_postfix_relayhost: smtp.example.org
+
+## 'message_size_limit' of main.cf
+homegw_postfix_message_size_limit: 41980000
+
+## maildrop default maildir
+homegw_postfix_maildrop_default_maildir: '$HOME/Maildir'

@@ -27,7 +27,7 @@
   lineinfile:
     path: /etc/postfix/main.cf
     regexp: "^mynetworks"
-    line: "mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 {{ homegw_postfix_internal_hostprefix }} {{ homegw_postfix_external_hostprefix }}"
+    line: "mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 {{ homegw_postfix_internal_hostprefix|ipaddr('subnet') }} {{ homegw_postfix_external_hostprefix|ipaddr('subnet') }}"
   register: result
 
 - name: modify message_size_limit in the postfix main file
